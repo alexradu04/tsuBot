@@ -150,6 +150,9 @@ function onMessageHandler(target, context, msg, self) {
         moveInQueue(fortniteQueue, position, oldPos);
         client.say(target, `Successfully moved ${context['display-name']} from position ${oldPos+1} to position ${position+1}`);
     }
+    if(msg==='!github') {
+        client.say(target, `Check out my spaghetti here: https://github.com/alexradu04/Tsu-Queue-Manager-Bot`);
+    }
 }
 
 client.connect();
