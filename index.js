@@ -153,6 +153,9 @@ function onMessageHandler(target, context, msg, self) {
     if(msg==='!github') {
         client.say(target, `Check out my spaghetti here: https://github.com/alexradu04/Tsu-Queue-Manager-Bot`);
     }
+    if(msg==='!help') {
+        client.say(target, "List of commands: https://imgur.com/HhKO9wc")
+    }
 }
 
 client.connect();
