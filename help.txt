@@ -1,0 +1,8 @@
+List of commands:
+!game_queue : shows the current players in queue
+!join : adds you to rhe queue
+!remove <x> : removes first x players from queue (MOD-ONLY)
+!remove <x> : removes player with name x from queue (MOD-ONLY)
+!move <x> <y> : moves player x to position y (MOD-ONLY)
+!github : gives you a link to the code
+!help : shows this
