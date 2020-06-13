@@ -16,12 +16,12 @@ client.on('connected', onConnectedHandler);
 client.on('message', onMessageHandler);
 
 function moveInQueue(v, where, from) {
-    let aux=v[from];
+    let aux = v[from];
     v.splice(from, 1);
-    for(let i=fortniteQueue.length;i>=where;--i) {
-        v[i]=v[i-1];
+    for (let i = fortniteQueue.length; i >= where; --i) {
+        v[i] = v[i - 1];
     }
-    v[where]=aux;
+    v[where] = aux;
 }
 
 function onConnectedHandler(addr, port) {
@@ -33,9 +33,8 @@ function onMessageHandler(target, context, msg, self) {
         return;
     console.log(msg);
     if (msg === '!boop') {
-        client.say(target, `Tsu has been BOOPED!`);
-    }
-    if (msg === '!join') {
+        client.say(target, `Tsu has been BOOPED by @${context['display-name']}!`);
+    } else if (msg === '!join') {
         if (fortniteQueue.includes(context.username))
             return;
         fortniteQueue.push(context.username);
@@ -44,8 +43,15 @@ function onMessageHandler(target, context, msg, self) {
         ans += fortniteQueue.toString();
         ans += ']';
         client.say(target, ans);
-    }
-    if (msg.startsWith('!remove')) {
+    } else if (msg === '!remove_me') {
+        for (let i = 0; i < fortniteQueue.length; ++i) {
+            if (fortniteQueue[i] === context.username) {
+                fortniteQueue.splice(i, 1);
+                break;
+            }
+        }
+        client.say(target, `Successfully removed you from the queue, @${context['display-name']}`)
+    } else if (msg.startsWith('!remove')) {
         if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04') {
             let mode = 0;
             let okk = 0;
@@ -105,15 +111,11 @@ function onMessageHandler(target, context, msg, self) {
 
         } else {
             client.say(target, `You don't have permission to execute that command!`);
-            return;
         }
-    }
-    if (msg === '!game_queue') {
+    } else if (msg === '!game_queue') {
         client.say(target, `Queue consists of : [ ${fortniteQueue} ]`)
-    }
-    if (msg.startsWith('!move')) {
-        if (!(context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04'))
-        {
+    } else if (msg.startsWith('!move')) {
+        if (!(context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')) {
             client.say(target, `You don't have permission to execute that command!`);
             return;
         }
@@ -132,28 +134,26 @@ function onMessageHandler(target, context, msg, self) {
                 mover += msg[i];
             }
             if (ok === 2) {
-                position = position * 10 + msg[i]-'0';
+                position = position * 10 + msg[i] - '0';
             }
         }
         position--;
-        if(position<0 || position>=fortniteQueue.length) {
-            client.say(target,`Bruh, there is no such position in the queue!`);
+        if (position < 0 || position >= fortniteQueue.length) {
+            client.say(target, `Bruh, there is no such position in the queue!`);
             return;
         }
-        let oldPos=0;
-        for(let i=0;i<fortniteQueue.length;++i) {
-            if(fortniteQueue[i].toLowerCase()===mover.toLowerCase()) {
-                oldPos=i;
+        let oldPos = 0;
+        for (let i = 0; i < fortniteQueue.length; ++i) {
+            if (fortniteQueue[i].toLowerCase() === mover.toLowerCase()) {
+                oldPos = i;
                 break;
             }
         }
         moveInQueue(fortniteQueue, position, oldPos);
-        client.say(target, `Successfully moved ${context['display-name']} from position ${oldPos+1} to position ${position+1}`);
-    }
-    if(msg==='!github') {
+        client.say(target, `Successfully moved ${context['display-name']} from position ${oldPos + 1} to position ${position + 1}`);
+    } else if (msg === '!github') {
         client.say(target, `Check out my spaghetti here: https://github.com/alexradu04/Tsu-Queue-Manager-Bot`);
-    }
-    if(msg==='!help') {
+    } else if (msg === '!help') {
         client.say(target, "List of commands: https://imgur.com/HhKO9wc")
     }
 }
