@@ -154,7 +154,7 @@ function onMessageHandler(target, context, msg, self) {
     } else if (msg === '!github') {
         client.say(target, `Check out my spaghetti here: https://github.com/alexradu04/Tsu-Queue-Manager-Bot`);
     } else if (msg === '!help') {
-        client.say(target, "List of commands: https://imgur.com/HhKO9wc")
+        client.say(target, "List of commands: https://imgur.com/kidkaga")
     }
 }
 
