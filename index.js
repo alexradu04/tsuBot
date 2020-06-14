@@ -49,6 +49,7 @@ function onMessageHandler(target, context, msg, self) {
                 break;
             }
         }
+
         let boopCount=store.get('counter');
         if(boopCount===undefined) {
             boopCount=0;

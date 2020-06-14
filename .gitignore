@@ -1,4 +1,4 @@
+db.json
 *.env
 node_modules
 .idea/
-db.json
