@@ -1,4 +1,6 @@
 const tmi = require('tmi.js');
+const store = require('data-store')({ path: process.cwd() + '/db.json' });
+
 require('dotenv').config();
 const opts = {
     identity: {
@@ -32,8 +34,28 @@ function onMessageHandler(target, context, msg, self) {
     if (self)
         return;
     console.log(msg);
-    if (msg === '!boop') {
-        client.say(target, `Tsu has been BOOPED by @${context['display-name']}!`);
+    if (msg.startsWith('!boop')) {
+        let ok=0;
+        let victim='';
+        for(let i=6;i<msg.length;++i) {
+            if(msg[i]==='@') {
+                ok=1;
+                //continue;
+            }
+            if(ok===1) {
+                victim+=msg[i];
+            }
+            if(msg[i]===' ' && ok===1) {
+                break;
+            }
+        }
+        let boopCount=store.get('counter');
+        if(boopCount===undefined) {
+            boopCount=0;
+        }
+        boopCount++;
+        store.set('counter',boopCount);
+        client.say(target, `${victim} has been BOOPED by @${context['display-name']}! In total there have been ${boopCount} boops.`);
     } else if (msg === '!join') {
         if (fortniteQueue.includes(context.username))
             return;
