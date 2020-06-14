@@ -56,7 +56,11 @@ function onMessageHandler(target, context, msg, self) {
         }
         boopCount++;
         store.set('counter',boopCount);
-        client.say(target, `${victim} has been BOOPED by @${context['display-name']}! In total there have been ${boopCount} boops.`);
+        if(victim!=='') {
+            client.say(target, `${victim} has been BOOPED by @${context['display-name']}! In total there have been ${boopCount} boops.`);
+        } else {
+            client.say(target, `you should @ who you want to boop.`)
+        }
     } else if (msg === '!join') {
         if (fortniteQueue.includes(context.username))
             return;
