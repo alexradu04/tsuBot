@@ -1,6 +1,6 @@
 List of commands:
 
-!boop : boops tsu
+!boop @<x> : boops x
 !join : adds you to the queue
 !game_queue : shows the current queue
 !remove_me : removes you from the queue
