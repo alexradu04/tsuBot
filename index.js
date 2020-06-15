@@ -1,5 +1,5 @@
 const tmi = require('tmi.js');
-const store = require('data-store')({ path: process.cwd() + '/db.json' });
+const store = require('data-store')({path: process.cwd() + '/db.json'});
 
 require('dotenv').config();
 const opts = {
@@ -35,28 +35,28 @@ function onMessageHandler(target, context, msg, self) {
         return;
     console.log(msg);
     if (msg.startsWith('!boop')) {
-        let ok=0;
-        let victim='';
-        for(let i=6;i<msg.length;++i) {
-            if(msg[i]==='@') {
-                ok=1;
+        let ok = 0;
+        let victim = '';
+        for (let i = 6; i < msg.length; ++i) {
+            if (msg[i] === '@') {
+                ok = 1;
                 //continue;
             }
-            if(ok===1) {
-                victim+=msg[i];
+            if (ok === 1) {
+                victim += msg[i];
             }
-            if(msg[i]===' ' && ok===1) {
+            if (msg[i] === ' ' && ok === 1) {
                 break;
             }
         }
 
-        let boopCount=store.get('counter');
-        if(boopCount===undefined) {
-            boopCount=0;
+        let boopCount = store.get('counter');
+        if (boopCount === undefined) {
+            boopCount = 0;
         }
         boopCount++;
-        store.set('counter',boopCount);
-        if(victim!=='') {
+        store.set('counter', boopCount);
+        if (victim !== '') {
             client.say(target, `${victim} has been BOOPED by @${context['display-name']}! In total there have been ${boopCount} boops.`);
         } else {
             client.say(target, `you should @ who you want to boop.`)
@@ -99,13 +99,19 @@ function onMessageHandler(target, context, msg, self) {
                 let remover = '';
                 let ok = 0;
                 for (let i = 0; i < msg.length; ++i) {
-                    if (msg[i] === ' ') {
+                    if (msg[i] === '@') {
                         ok = 1;
                         continue;
                     }
                     if (ok === 1) {
                         remover += msg[i];
                     }
+                    if (ok === 1 && msg[i] === ' ')
+                        break;
+                }
+                if(ok<1) {
+                    client.say(target, `Bruh, you have to @ the dude you want to remove`);
+                    return;
                 }
                 let targetExists = 0;
                 for (let i = 0; i < fortniteQueue.length; ++i) {
@@ -153,10 +159,10 @@ function onMessageHandler(target, context, msg, self) {
             if (msg[i] === ' ') {
                 if (ok === 1) {
                     ok = 2;
-                } else
-                    ok = 1;
-                continue;
+                }
             }
+            if (msg[i] === '@')
+                ok = 1;
             if (ok === 1) {
                 mover += msg[i];
             }
@@ -165,6 +171,10 @@ function onMessageHandler(target, context, msg, self) {
             }
         }
         position--;
+        if(ok<1) {
+            client.say(target, `Bruh, you have to @ the dude you want to move`);
+            return;
+        }
         if (position < 0 || position >= fortniteQueue.length) {
             client.say(target, `Bruh, there is no such position in the queue!`);
             return;
@@ -181,7 +191,7 @@ function onMessageHandler(target, context, msg, self) {
     } else if (msg === '!github') {
         client.say(target, `Check out my spaghetti here: https://github.com/alexradu04/Tsu-Queue-Manager-Bot`);
     } else if (msg === '!help') {
-        client.say(target, "List of commands: https://imgur.com/7W1KmaT")
+        client.say(target, "List of commands: https://imgur.com/ON7YZYw")
     }
 }
 

@@ -5,7 +5,7 @@ List of commands:
 !game_queue : shows the current queue
 !remove_me : removes you from the queue
 !remove <x> : removes first x players from the queue (MOD-ONLY)
-!remove <X> : removes player with name x from queue (MOD-ONLY)
-!move <x> <y> : moves player x to position y (MOD-ONLY)
+!remove @<X> : removes player with name x from queue (MOD-ONLY)
+!move @<x> <y> : moves player x to position y (MOD-ONLY)
 !github : give you a link to the source code
 !help : shows this
