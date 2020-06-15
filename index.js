@@ -34,6 +34,27 @@ function onMessageHandler(target, context, msg, self) {
     if (self)
         return;
     console.log(msg);
+    if (msg.startsWith('!hug')) {
+        let ok = 0;
+        let victim = '';
+        for (let i = 4; i < msg.length; ++i) {
+            if (msg[i] === '@') {
+                ok = 1;
+                //continue;
+            }
+            if (ok === 1) {
+                victim += msg[i];
+            }
+            if (msg[i] === ' ' && ok === 1) {
+                break;
+            }
+        }
+        if (victim !== '') {
+            client.say(target, `ALL THE HUGS TO ${victim} FROM @${context['display-name']}!`);
+        } else {
+            client.say(target, `you should @ who you want to hug.`)
+        }
+    }else
     if (msg.startsWith('!boop')) {
         let ok = 0;
         let victim = '';
