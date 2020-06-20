@@ -95,7 +95,14 @@ function onMessageHandler(target, context, msg, self) {
         boopCooldown=0;
         let resp="";
         if (victim !== '') {
-            resp=`${victim} has been BOOPED for the ${myBoops}th time by @${context['display-name']}! In total there have been ${boopCount} boops.`;
+            let term;
+            switch (myBoops) {
+                case 1: term='st';break;
+                case 2: term='nd';break;
+                case 3: term='rd';break;
+                default: term='th';break;
+            }
+            resp=`${victim} has been BOOPED for the ${myBoops}${term} time by @${context['display-name']}! In total there have been ${boopCount} boops.`;
             //client.say(target, );
             resp +=`[${emoji.get('no_entry')} 20s]`;
             boopCooldown=1;
