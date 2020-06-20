@@ -1,6 +1,6 @@
 const tmi = require('tmi.js');
 const store = require('data-store')({path: process.cwd() + '/db.json'});
-
+const emoji = require('node-emoji');
 require('dotenv').config();
 const opts = {
     identity: {
@@ -30,11 +30,13 @@ function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`);
 }
 
+let boopCooldown=0;
+let hugCooldown=0;
 function onMessageHandler(target, context, msg, self) {
     if (self)
         return;
     console.log(msg);
-    if (msg.startsWith('!hug')) {
+    if (msg.startsWith('!hug') && !hugCooldown) {
         let ok = 0;
         let victim = '';
         for (let i = 4; i < msg.length; ++i) {
@@ -50,12 +52,19 @@ function onMessageHandler(target, context, msg, self) {
             }
         }
         if (victim !== '') {
-            client.say(target, `ALL THE HUGS TO ${victim} FROM @${context['display-name']}!`);
+            hugCooldown=1;
+            client.say(target, `ALL THE HUGS TO ${victim} FROM @${context['display-name']}! [${emoji.get('no_entry')} 20s]`);
         } else {
             client.say(target, `you should @ who you want to hug.`)
         }
+        if(hugCooldown) {
+            setTimeout(function() {
+                hugCooldown=0;
+                console.log('Timeout expired');
+            }, 10000);
+        }
     }else
-    if (msg.startsWith('!boop')) {
+    if (msg.startsWith('!boop') && !boopCooldown) {
         let ok = 0;
         let victim = '';
         for (let i = 6; i < msg.length; ++i) {
@@ -72,16 +81,36 @@ function onMessageHandler(target, context, msg, self) {
         }
 
         let boopCount = store.get('counter');
+        let myBoops = store.get(victim);
         if (boopCount === undefined) {
             boopCount = 0;
         }
-        boopCount++;
-        store.set('counter', boopCount);
-        if (victim !== '') {
-            client.say(target, `${victim} has been BOOPED by @${context['display-name']}! In total there have been ${boopCount} boops.`);
-        } else {
-            client.say(target, `you should @ who you want to boop.`)
+        if (myBoops === undefined) {
+            myBoops = 0;
         }
+        boopCount++;
+        myBoops++;
+        store.set('counter', boopCount);
+        store.set(victim, myBoops);
+        boopCooldown=0;
+        let resp="";
+        if (victim !== '') {
+            resp=`${victim} has been BOOPED for the ${myBoops}th time by @${context['display-name']}! In total there have been ${boopCount} boops.`;
+            //client.say(target, );
+            resp +=`[${emoji.get('no_entry')} 10s]`;
+            boopCooldown=1;
+        } else {
+            resp=`you should @ who you want to boop.`;
+            //client.say(target, `you should @ who you want to boop.`)
+        }
+        client.say(target, resp);
+        if(boopCooldown) {
+            setTimeout(function() {
+                boopCooldown=0;
+                console.log('Timeout expired');
+            }, 20000);
+        }
+
     } else if (msg === '!join') {
         if (fortniteQueue.includes(context.username))
             return;
