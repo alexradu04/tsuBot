@@ -53,7 +53,7 @@ function onMessageHandler(target, context, msg, self) {
         }
         if (victim !== '') {
             hugCooldown=1;
-            client.say(target, `ALL THE HUGS TO ${victim} FROM @${context['display-name']}! [${emoji.get('no_entry')} 20s]`);
+            client.say(target, `ALL THE HUGS TO ${victim} FROM @${context['display-name']}! [${emoji.get('no_entry')} 10s]`);
         } else {
             client.say(target, `you should @ who you want to hug.`)
         }
@@ -97,7 +97,7 @@ function onMessageHandler(target, context, msg, self) {
         if (victim !== '') {
             resp=`${victim} has been BOOPED for the ${myBoops}th time by @${context['display-name']}! In total there have been ${boopCount} boops.`;
             //client.say(target, );
-            resp +=`[${emoji.get('no_entry')} 10s]`;
+            resp +=`[${emoji.get('no_entry')} 20s]`;
             boopCooldown=1;
         } else {
             resp=`you should @ who you want to boop.`;
