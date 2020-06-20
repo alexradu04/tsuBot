@@ -128,6 +128,11 @@ function onMessageHandler(target, context, msg, self) {
             }
         }
         client.say(target, `Successfully removed you from the queue, @${context['display-name']}`)
+    }else if(msg === '!remove_all') {
+        if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04') {
+            fortniteQueue.splice(0, fortniteQueue.length);
+            client.say(target, 'Queue is now empty!');
+        }
     } else if (msg.startsWith('!remove')) {
         if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04') {
             let mode = 0;
@@ -241,7 +246,7 @@ function onMessageHandler(target, context, msg, self) {
     } else if (msg === '!github') {
         client.say(target, `Check out my spaghetti here: https://github.com/alexradu04/Tsu-Queue-Manager-Bot`);
     } else if (msg === '!help') {
-        client.say(target, "List of commands: https://imgur.com/ON7YZYw")
+        client.say(target, "List of commands: https://imgur.com/eguMtAb")
     }
 }
 
