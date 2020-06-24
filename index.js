@@ -223,8 +223,10 @@ function onMessageHandler(target, context, msg, self) {
                     ok = 2;
                 }
             }
-            if (msg[i] === '@')
+            if (msg[i] === '@') {
                 ok = 1;
+                continue;
+            }
             if (ok === 1) {
                 mover += msg[i];
             }
@@ -249,7 +251,7 @@ function onMessageHandler(target, context, msg, self) {
             }
         }
         moveInQueue(fortniteQueue, position, oldPos);
-        client.say(target, `Successfully moved ${context['display-name']} from position ${oldPos + 1} to position ${position + 1}`);
+        client.say(target, `Successfully moved ${mover} from position ${oldPos + 1} to position ${position + 1}`);
     } else if (msg === '!github') {
         client.say(target, `Check out my spaghetti here: https://github.com/alexradu04/Tsu-Queue-Manager-Bot`);
     } else if (msg === '!help') {
