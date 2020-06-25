@@ -209,7 +209,39 @@ function onMessageHandler(target, context, msg, self) {
         }
     } else if (msg === '!game_queue') {
         client.say(target, `Queue consists of : [ ${fortniteQueue} ]`)
-    } else if (msg.startsWith('!move')) {
+    } else if(msg.startsWith('!move_end')) {
+        if (!(context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')) {
+            client.say(target, `You don't have permission to execute that command!`);
+            return;
+        }
+        let ok=0;
+        let mover='';
+        for(let i=0;i<msg.length;++i) {
+            if(msg[i]==='@') {
+                ok=1;
+                continue;
+            }
+            if(ok===1 && msg[i]===' ')
+                break;
+            if(ok===1) {
+                mover+=msg[i];
+            }
+        }
+        let pos=-1;
+        for(let i=0;i<fortniteQueue.length;++i) {
+            if(fortniteQueue[i].toLowerCase()===mover.toLowerCase()) {
+                pos=i;
+                break;
+            }
+        }
+        if(pos===-1) {
+            client.say(target, 'Bruh, he is not in the queue');
+            return;
+        }
+        fortniteQueue.splice(pos,1);
+        fortniteQueue.push(mover);
+        client.say(target, `Moved @${mover} from position ${pos+1} to the end.`);
+    }else if (msg.startsWith('!move')) {
         if (!(context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')) {
             client.say(target, `You don't have permission to execute that command!`);
             return;
@@ -221,6 +253,7 @@ function onMessageHandler(target, context, msg, self) {
             if (msg[i] === ' ') {
                 if (ok === 1) {
                     ok = 2;
+                    continue;
                 }
             }
             if (msg[i] === '@') {
@@ -252,10 +285,11 @@ function onMessageHandler(target, context, msg, self) {
         }
         moveInQueue(fortniteQueue, position, oldPos);
         client.say(target, `Successfully moved ${mover} from position ${oldPos + 1} to position ${position + 1}`);
-    } else if (msg === '!github') {
+    }
+    else if (msg === '!github') {
         client.say(target, `Check out my spaghetti here: https://github.com/alexradu04/Tsu-Queue-Manager-Bot`);
     } else if (msg === '!help') {
-        client.say(target, "List of commands: https://imgur.com/eguMtAb")
+        client.say(target, "List of commands: https://imgur.com/qzS4Vop")
     }
 }
 

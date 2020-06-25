@@ -9,5 +9,6 @@ List of commands:
 !remove @<X> : removes player with name x from queue (MOD-ONLY)
 !remove_all : removes all players from the queue (MOD-ONLY)
 !move @<x> <y> : moves player x to position y (MOD-ONLY)
+!move_end @<x> : moves player x to the end of the queue (MOD-ONLY)
 !github : give you a link to the source code
 !help : shows this
