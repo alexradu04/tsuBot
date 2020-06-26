@@ -2,6 +2,8 @@ List of commands:
 
 !hug @<x> : hugs x
 !boop @<x> : boops x
+!open : opens queue (MOD-ONLY)
+!close : closes queue (MOD-ONLY)
 !join : adds you to the queue
 !game_queue : shows the current queue
 !remove_me : removes you from the queue

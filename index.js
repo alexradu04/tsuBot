@@ -32,6 +32,7 @@ function onConnectedHandler(addr, port) {
 
 let boopCooldown=0;
 let hugCooldown=0;
+let openQueue=0;
 function onMessageHandler(target, context, msg, self) {
     if (self)
         return;
@@ -93,7 +94,7 @@ function onMessageHandler(target, context, msg, self) {
         store.set('counter', boopCount);
         store.set(victim, myBoops);
         boopCooldown=0;
-        let resp="";
+        let resp;
         if (victim !== '') {
             let term;
             switch (myBoops) {
@@ -118,7 +119,7 @@ function onMessageHandler(target, context, msg, self) {
             }, 20000);
         }
 
-    } else if (msg === '!join') {
+    } else if (msg === '!join' && openQueue) {
         if (fortniteQueue.includes(context.username))
             return;
         fortniteQueue.push(context.username);
@@ -135,12 +136,12 @@ function onMessageHandler(target, context, msg, self) {
             }
         }
         client.say(target, `Successfully removed you from the queue, @${context['display-name']}`)
-    }else if(msg === '!remove_all') {
+    }else if(msg === '!remove_all' ) {
         if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04') {
             fortniteQueue.splice(0, fortniteQueue.length);
             client.say(target, 'Queue is now empty!');
         }
-    } else if (msg.startsWith('!remove')) {
+    } else if (msg.startsWith('!remove') ) {
         if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04') {
             let mode = 0;
             let okk = 0;
@@ -207,9 +208,9 @@ function onMessageHandler(target, context, msg, self) {
         } else {
             client.say(target, `You don't have permission to execute that command!`);
         }
-    } else if (msg === '!game_queue') {
+    } else if (msg === '!game_queue' ) {
         client.say(target, `Queue consists of : [ ${fortniteQueue} ]`)
-    } else if(msg.startsWith('!move_end')) {
+    } else if(msg.startsWith('!move_end') ) {
         if (!(context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')) {
             client.say(target, `You don't have permission to execute that command!`);
             return;
@@ -289,7 +290,27 @@ function onMessageHandler(target, context, msg, self) {
     else if (msg === '!github') {
         client.say(target, `Check out my spaghetti here: https://github.com/alexradu04/Tsu-Queue-Manager-Bot`);
     } else if (msg === '!help') {
-        client.say(target, "List of commands: https://imgur.com/qzS4Vop")
+        client.say(target, "List of commands: https://raw.githubusercontent.com/alexradu04/Tsu-Queue-Manager-Bot/master/help.txt")
+    } else if(msg==='!open') {
+        if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')
+        {
+            openQueue = 1;
+            client.say(target, `Queue successfully opened!`);
+        }
+        else
+        {
+            client.say(target, `You do not have permission to execute that command!`);
+        }
+    } else if(msg==='!close') {
+        if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')
+        {
+            openQueue = 0;
+            client.say(target, `Queue successfully closed!`);
+        }
+        else
+        {
+            client.say(target, `You do not have permission to execute that command!`);
+        }
     }
 }
 
