@@ -34,6 +34,11 @@ let boopCooldown=0;
 let hugCooldown=0;
 let openQueue=0;
 function onMessageHandler(target, context, msg, self) {
+    if(msg==='!secret') {
+        store.set('queue', fortniteQueue);
+        let temp= store.get('queue');
+        console.log(temp);
+    }
     if (self)
         return;
     console.log(msg);
@@ -120,28 +125,35 @@ function onMessageHandler(target, context, msg, self) {
         }
 
     } else if (msg === '!join' && openQueue) {
+        fortniteQueue = store.get('queue');
         if (fortniteQueue.includes(context.username))
             return;
         fortniteQueue.push(context.username);
+        store.set('queue', fortniteQueue);
         console.log(`Added ${context['display-name']} to queue`);
         let ans = `@${context['display-name']} Has joined the queue. The queue currently consists of: [`;
         ans += fortniteQueue.toString();
         ans += ']';
         client.say(target, ans);
     } else if (msg === '!remove_me') {
+        fortniteQueue = store.get('queue');
         for (let i = 0; i < fortniteQueue.length; ++i) {
             if (fortniteQueue[i] === context.username) {
                 fortniteQueue.splice(i, 1);
                 break;
             }
         }
+        store.set('queue', fortniteQueue);
         client.say(target, `Successfully removed you from the queue, @${context['display-name']}`)
     }else if(msg === '!remove_all' ) {
+        fortniteQueue = store.get('queue');
         if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04') {
             fortniteQueue.splice(0, fortniteQueue.length);
             client.say(target, 'Queue is now empty!');
+        store.set('queue', fortniteQueue);
         }
     } else if (msg.startsWith('!remove') ) {
+        fortniteQueue = store.get('queue');
         if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04') {
             let mode = 0;
             let okk = 0;
@@ -204,13 +216,16 @@ function onMessageHandler(target, context, msg, self) {
                 client.say(target, `Successfully removed ${noOfRemovals} players from the queue`);
                 console.log(fortniteQueue);
             }
-
+        store.set('queue', fortniteQueue);
         } else {
             client.say(target, `You don't have permission to execute that command!`);
         }
     } else if (msg === '!game_queue' ) {
+        fortniteQueue = store.get('queue');
+        //store.set('queue', fortniteQueue);
         client.say(target, `Queue consists of : [ ${fortniteQueue} ]`)
     } else if(msg.startsWith('!move_end') ) {
+        fortniteQueue = store.get('queue');
         if (!(context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')) {
             client.say(target, `You don't have permission to execute that command!`);
             return;
@@ -242,7 +257,9 @@ function onMessageHandler(target, context, msg, self) {
         fortniteQueue.splice(pos,1);
         fortniteQueue.push(mover);
         client.say(target, `Moved @${mover} from position ${pos+1} to the end.`);
+        store.set('queue', fortniteQueue);
     }else if (msg.startsWith('!move')) {
+        fortniteQueue = store.get('queue');
         if (!(context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')) {
             client.say(target, `You don't have permission to execute that command!`);
             return;
@@ -286,6 +303,7 @@ function onMessageHandler(target, context, msg, self) {
         }
         moveInQueue(fortniteQueue, position, oldPos);
         client.say(target, `Successfully moved ${mover} from position ${oldPos + 1} to position ${position + 1}`);
+        store.set('queue', fortniteQueue);
     }
     else if (msg === '!github') {
         client.say(target, `Check out my spaghetti here: https://github.com/alexradu04/Tsu-Queue-Manager-Bot`);
