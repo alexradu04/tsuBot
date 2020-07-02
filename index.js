@@ -33,6 +33,10 @@ function onConnectedHandler(addr, port) {
 let boopCooldown=0;
 let hugCooldown=0;
 let openQueue=0;
+let temp= store.get('queue');
+if(temp===undefined) {
+    store.set('queue', fortniteQueue);
+}
 function onMessageHandler(target, context, msg, self) {
     if(msg==='!secret') {
         store.set('queue', fortniteQueue);
