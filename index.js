@@ -32,12 +32,13 @@ function onConnectedHandler(addr, port) {
 
 let boopCooldown=0;
 let hugCooldown=0;
-let openQueue=0;
-let temp= store.get('queue');
-if(temp===undefined) {
-    store.set('queue', fortniteQueue);
-}
+let openQueue=true;
+
 function onMessageHandler(target, context, msg, self) {
+    let temp= store.get('queue');
+    if(temp===undefined) {
+        store.set('queue', []);
+    }
     if(msg==='!secret') {
         store.set('queue', fortniteQueue);
         let temp= store.get('queue');
@@ -130,6 +131,7 @@ function onMessageHandler(target, context, msg, self) {
 
     } else if (msg === '!join' && openQueue) {
         fortniteQueue = store.get('queue');
+        console.log(fortniteQueue);
         if (fortniteQueue.includes(context.username))
             return;
         fortniteQueue.push(context.username);
@@ -147,6 +149,7 @@ function onMessageHandler(target, context, msg, self) {
                 break;
             }
         }
+
         store.set('queue', fortniteQueue);
         client.say(target, `Successfully removed you from the queue, @${context['display-name']}`)
     }else if(msg === '!remove_all' ) {
@@ -316,7 +319,7 @@ function onMessageHandler(target, context, msg, self) {
     } else if(msg==='!open') {
         if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')
         {
-            openQueue = 1;
+            openQueue = true;
             client.say(target, `Queue successfully opened!`);
         }
         else
@@ -326,7 +329,7 @@ function onMessageHandler(target, context, msg, self) {
     } else if(msg==='!close') {
         if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')
         {
-            openQueue = 0;
+            openQueue = false;
             client.say(target, `Queue successfully closed!`);
         }
         else
