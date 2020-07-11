@@ -9,7 +9,10 @@ const opts = {
     },
     channels: [
         'tsukunertov'
-    ]
+    ],
+    connection: {
+        reconnect:true
+    }
 };
 
 const client = new tmi.client(opts);
@@ -46,7 +49,7 @@ function onMessageHandler(target, context, msg, self) {
     }
     if (self)
         return;
-    console.log(msg);
+   // console.log(msg);
     if (msg.startsWith('!hug') && !hugCooldown) {
         let ok = 0;
         let victim = '';
