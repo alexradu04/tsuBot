@@ -74,7 +74,7 @@ function onMessageHandler(target, context, msg, self) {
         if(hugCooldown) {
             setTimeout(function() {
                 hugCooldown=0;
-                console.log('Timeout expired');
+                //console.log('Timeout expired');
             }, 10000);
         }
     }else
@@ -128,18 +128,18 @@ function onMessageHandler(target, context, msg, self) {
         if(boopCooldown) {
             setTimeout(function() {
                 boopCooldown=0;
-                console.log('Timeout expired');
+                //console.log('Timeout expired');
             }, 20000);
         }
 
     } else if (msg === '!join' && openQueue) {
         fortniteQueue = store.get('queue');
-        console.log(fortniteQueue);
+        //console.log(fortniteQueue);
         if (fortniteQueue.includes(context.username))
             return;
         fortniteQueue.push(context.username);
         store.set('queue', fortniteQueue);
-        console.log(`Added ${context['display-name']} to queue`);
+       // console.log(`Added ${context['display-name']} to queue`);
         let ans = `@${context['display-name']} Has joined the queue. The queue currently consists of: [`;
         ans += fortniteQueue.toString();
         ans += ']';
@@ -207,7 +207,7 @@ function onMessageHandler(target, context, msg, self) {
                 }
                 if (targetExists) {
                     client.say(target, `Successfully removed ${remover} from the queue.`);
-                    console.log(`Successfully removed ${remover} from the queue.`);
+                    //console.log(`Successfully removed ${remover} from the queue.`);
                 } else {
                     client.say(target, `Error! ${remover} is not in the queue.`);
                 }
@@ -219,12 +219,12 @@ function onMessageHandler(target, context, msg, self) {
                         noOfRemovals += msg[i] - '0';
                     }
                 }
-                console.log(noOfRemovals);
+                //console.log(noOfRemovals);
                 for (let i = 1; i <= Math.min(noOfRemovals, fortniteQueue.length); ++i) {
                     fortniteQueue.shift();
                 }
                 client.say(target, `Successfully removed ${noOfRemovals} players from the queue`);
-                console.log(fortniteQueue);
+                //console.log(fortniteQueue);
             }
         store.set('queue', fortniteQueue);
         } else {
