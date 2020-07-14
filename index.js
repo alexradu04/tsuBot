@@ -94,21 +94,25 @@ function onMessageHandler(target, context, msg, self) {
         }
         let boopCount = store.get('counter');
         let resp;
+        let trap=0;
         if (victim === '@booptsubot') {
-            victim= '@'+context['display-name'].toLowerCase();
-            let myBoops = store.get(victim);
-            if (boopCount === undefined) {
-                boopCount = 0;
-            }
-            if (myBoops === undefined) {
-                myBoops = 0;
-            }
-            boopCount++;
-            myBoops++;
-            store.set('counter', boopCount);
-            victim= victim.toLowerCase();
-            store.set(victim, myBoops);
-            boopCooldown = 0;
+            victim = '@' + context['display-name'].toLowerCase();
+            trap=1;
+        }
+        let myBoops = store.get(victim);
+        if (boopCount === undefined) {
+            boopCount = 0;
+        }
+        if (myBoops === undefined) {
+            myBoops = 0;
+        }
+        boopCount++;
+        myBoops++;
+        store.set('counter', boopCount);
+        victim = victim.toLowerCase();
+        store.set(victim, myBoops);
+        boopCooldown = 0;
+        if (victim !== '') {
             let term;
             switch (myBoops) {
                 case 1:
@@ -124,50 +128,19 @@ function onMessageHandler(target, context, msg, self) {
                     term = 'th';
                     break;
             }
-            resp = `You fell right into my trap. You, ${victim} have been booped. In total there have been ${boopCount} boops.`;
+            if (trap) {
+                resp = `You fell right into my trap. You, ${victim} have been booped. In total there have been ${boopCount} boops.`;
+            } else {
+                resp = `${victim} has been BOOPED for the ${myBoops}${term} time by @${context['display-name']}! In total there have been ${boopCount} boops.`;
+            }
             //client.say(target, );
             resp += `[${emoji.get('no_entry')} 20s]`;
             boopCooldown = 1;
-            //return;
-        }else {
-            let myBoops = store.get(victim);
-            if (boopCount === undefined) {
-                boopCount = 0;
-            }
-            if (myBoops === undefined) {
-                myBoops = 0;
-            }
-            boopCount++;
-            myBoops++;
-            store.set('counter', boopCount);
-            victim= victim.toLowerCase();
-            store.set(victim, myBoops);
-            boopCooldown = 0;
-            if (victim !== '') {
-                let term;
-                switch (myBoops) {
-                    case 1:
-                        term = 'st';
-                        break;
-                    case 2:
-                        term = 'nd';
-                        break;
-                    case 3:
-                        term = 'rd';
-                        break;
-                    default:
-                        term = 'th';
-                        break;
-                }
-                resp = `${victim} has been BOOPED for the ${myBoops}${term} time by @${context['display-name']}! In total there have been ${boopCount} boops.`;
-                //client.say(target, );
-                resp += `[${emoji.get('no_entry')} 20s]`;
-                boopCooldown = 1;
-            } else {
-                resp = `you should @ who you want to boop.`;
-                //client.say(target, `you should @ who you want to boop.`)
-            }
+        } else {
+            resp = `you should @ who you want to boop.`;
+            //client.say(target, `you should @ who you want to boop.`)
         }
+
         client.say(target, resp);
         if (boopCooldown) {
             setTimeout(function () {
