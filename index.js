@@ -35,7 +35,7 @@ function onConnectedHandler(addr, port) {
 
 let boopCooldown = 0;
 let hugCooldown = 0;
-let openQueue = true;
+let openQueue = false;
 
 function onMessageHandler(target, context, msg, self) {
     let temp = store.get('queue');
