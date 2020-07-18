@@ -309,10 +309,11 @@ function onMessageHandler(target, context, msg, self) {
                 mover += msg[i];
             }
             if (ok === 2) {
-                position = position * 10 + msg[i] - '0';
+                position = position * 10 + (msg[i] - '0');
             }
         }
         position--;
+        console.log(position);
         if (ok < 1) {
             client.say(target, `Bruh, you have to @ the dude you want to move`);
             return;
