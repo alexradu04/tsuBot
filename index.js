@@ -85,11 +85,11 @@ function onMessageHandler(target, context, msg, self) {
                 ok = 1;
                 //continue;
             }
-            if (ok === 1) {
-                victim += msg[i];
-            }
             if (msg[i] === ' ' && ok === 1) {
                 break;
+            }
+            if (ok === 1) {
+                victim += msg[i];
             }
         }
         let boopCount = store.get('counter');
