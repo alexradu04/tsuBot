@@ -99,6 +99,7 @@ function onMessageHandler(target, context, msg, self) {
             victim = '@' + context['display-name'].toLowerCase();
             trap=1;
         }
+        victim = victim.toLowerCase();
         let myBoops = store.get(victim);
         if (boopCount === undefined) {
             boopCount = 0;
@@ -109,7 +110,6 @@ function onMessageHandler(target, context, msg, self) {
         boopCount++;
         myBoops++;
         store.set('counter', boopCount);
-        victim = victim.toLowerCase();
         store.set(victim, myBoops);
         boopCooldown = 0;
         if (victim !== '') {
