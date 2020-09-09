@@ -14,3 +14,5 @@ List of commands:
 !move_end @<x> : moves player x to the end of the queue (MOD-ONLY)
 !github : give you a link to the source code
 !help : shows this
+!lurk : Set yourself to lurk mode
+!check_lurk @<x> : Check if x is lurking

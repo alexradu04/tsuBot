@@ -1,5 +1,6 @@
 const tmi = require('tmi.js');
 const store = require('data-store')({path: process.cwd() + '/db.json'});
+const lurkDB= require('data-store')({path: process.cwd() + '/lurk.json'});
 const emoji = require('node-emoji');
 require('dotenv').config();
 const opts = {
@@ -35,6 +36,7 @@ function onConnectedHandler(addr, port) {
 
 let boopCooldown = 0;
 let hugCooldown = 0;
+let lurkCooldown = 0;
 let openQueue = false;
 
 function onMessageHandler(target, context, msg, self) {
@@ -42,14 +44,50 @@ function onMessageHandler(target, context, msg, self) {
     if (temp === undefined) {
         store.set('queue', []);
     }
-    if (msg === '!secret') {
-        store.set('queue', fortniteQueue);
-        let temp = store.get('queue');
-        console.log(temp);
-    }
     if (self)
         return;
-    // console.log(msg);
+    if(msg.startsWith('!lurk')) {
+        lurkDB.set(context.username, true);
+        client.say(target, `${context['display-name']} is now lurking!`);
+        return ;
+    }
+    let isLurk= lurkDB.get(context.username);
+    if(isLurk === true) {
+        lurkDB.set(context.username, false);
+        client.say(target, `${context['display-name']} is back from lurking`);
+    }
+    if(msg.startsWith('!check_lurk') && !lurkCooldown) {
+        lurkCooldown=1;
+        let ok = 0;
+        let victim = '';
+        for (let i = 4; i < msg.length; ++i) {
+            if (msg[i] === '@') {
+                ok = 1;
+                continue;
+            }
+            if (ok === 1) {
+                victim += msg[i];
+            }
+            if (msg[i] === ' ' && ok === 1) {
+                break;
+            }
+        }
+        victim= victim.toLowerCase();
+        if (victim !== '') {
+            isLurk= lurkDB.get(victim);
+            if(isLurk === true) {
+                client.say(target, `You guessed it! ${victim} is lurking!`);
+            } else {
+                client.say(target, `Last time I checked, ${victim} wasn't lurking. He might have forgotten to !lurk, quit the stream, or just doesn't know what to say.`);
+            }
+            setTimeout(function () {
+                lurkCooldown = 0;
+                //console.log('Timeout expired');
+            }, 20000);
+        } else {
+            client.say(target, `You need to @ who you're checking on`);
+        }
+    }
     if (msg.startsWith('!hug') && !hugCooldown) {
         let ok = 0;
         let victim = '';
