@@ -76,9 +76,9 @@ function onMessageHandler(target, context, msg, self) {
         if (victim !== '') {
             isLurk= lurkDB.get(victim);
             if(isLurk === true) {
-                client.say(target, `You guessed it! ${victim} is lurking!`);
+                client.say(target, `You guessed it! ${victim} is lurking! [${emoji.get('no_entry')} 20s]`);
             } else {
-                client.say(target, `Last time I checked, ${victim} wasn't lurking. He might have forgotten to !lurk, quit the stream, or just doesn't know what to say.`);
+                client.say(target, `Last time I checked, ${victim} wasn't lurking. He might have forgotten to !lurk, quit the stream, or just doesn't know what to say. [${emoji.get('no_entry')} 20s]`);
             }
             setTimeout(function () {
                 lurkCooldown = 0;
