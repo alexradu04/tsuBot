@@ -1,6 +1,6 @@
 const tmi = require('tmi.js');
 const store = require('data-store')({path: process.cwd() + '/db.json'});
-const lurkDB= require('data-store')({path: process.cwd() + '/lurk.json'});
+const lurkDB = require('data-store')({path: process.cwd() + '/lurk.json'});
 const emoji = require('node-emoji');
 require('dotenv').config();
 const opts = {
@@ -46,18 +46,17 @@ function onMessageHandler(target, context, msg, self) {
     }
     if (self)
         return;
-    if(msg.startsWith('!lurk')) {
+    if (msg.startsWith('!lurk')) {
         lurkDB.set(context.username, true);
         client.say(target, `${context['display-name']} is now lurking!`);
-        return ;
+        return;
     }
-    let isLurk= lurkDB.get(context.username);
-    if(isLurk === true) {
+    let isLurk = lurkDB.get(context.username);
+    if (isLurk === true) {
         lurkDB.set(context.username, false);
         client.say(target, `${context['display-name']} is back from lurking`);
     }
-    if(msg.startsWith('!check_lurk') && !lurkCooldown) {
-        lurkCooldown=1;
+    if (msg.startsWith('!check_lurk') && !lurkCooldown) {
         let ok = 0;
         let victim = '';
         for (let i = 4; i < msg.length; ++i) {
@@ -72,10 +71,11 @@ function onMessageHandler(target, context, msg, self) {
                 break;
             }
         }
-        victim= victim.toLowerCase();
+        victim = victim.toLowerCase();
         if (victim !== '') {
-            isLurk= lurkDB.get(victim);
-            if(isLurk === true) {
+            lurkCooldown = 1;
+            isLurk = lurkDB.get(victim);
+            if (isLurk === true) {
                 client.say(target, `You guessed it! ${victim} is lurking! [${emoji.get('no_entry')} 20s]`);
             } else {
                 client.say(target, `Last time I checked, ${victim} wasn't lurking. He might have forgotten to !lurk, quit the stream, or just doesn't know what to say. [${emoji.get('no_entry')} 20s]`);
@@ -88,7 +88,7 @@ function onMessageHandler(target, context, msg, self) {
             client.say(target, `You need to @ who you're checking on`);
         }
     }
-    if (msg.startsWith('!hug') && !hugCooldown) {
+    if ((msg.startsWith('!hug') || msg.startsWith('!lehug')) && !hugCooldown) {
         let ok = 0;
         let victim = '';
         for (let i = 4; i < msg.length; ++i) {
@@ -105,9 +105,11 @@ function onMessageHandler(target, context, msg, self) {
         }
         if (victim !== '') {
             hugCooldown = 1;
-            client.say(target, `ALL THE HUGS TO ${victim} FROM @${context['display-name']}! [${emoji.get('no_entry')} 10s]`);
+            msg.startsWith('!hug') ?
+            client.say(target, `ALL THE HUGS TO ${victim} FROM @${context['display-name']}! [${emoji.get('no_entry')} 10s]`) :
+                client.say(target, `TOUS LES CÂLINS À LE ${victim} DE LE @${context['display-name']}! [${emoji.get('no_entry')} 10s]`);
         } else {
-            client.say(target, `you should @ who you want to hug.`)
+            client.say(target, `you should @ who you want to hug.`);
         }
         if (hugCooldown) {
             setTimeout(function () {
@@ -132,10 +134,10 @@ function onMessageHandler(target, context, msg, self) {
         }
         let boopCount = store.get('counter');
         let resp;
-        let trap=0;
+        let trap = 0;
         if (victim === '@booptsubot') {
             victim = '@' + context['display-name'].toLowerCase();
-            trap=1;
+            trap = 1;
         }
         victim = victim.toLowerCase();
         let myBoops = store.get(victim);
