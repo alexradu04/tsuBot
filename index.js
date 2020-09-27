@@ -106,7 +106,7 @@ function onMessageHandler(target, context, msg, self) {
         if (victim !== '') {
             hugCooldown = 1;
             msg.startsWith('!hug') ?
-            client.say(target, `ALL THE HUGS TO ${victim} FROM @${context['display-name']}! [${emoji.get('no_entry')} 10s]`) :
+                client.say(target, `ALL THE HUGS TO ${victim} FROM @${context['display-name']}! [${emoji.get('no_entry')} 10s]`) :
                 client.say(target, `TOUS LES CÂLINS À LE ${victim} DE LE @${context['display-name']}! [${emoji.get('no_entry')} 10s]`);
         } else {
             client.say(target, `you should @ who you want to hug.`);
@@ -114,7 +114,6 @@ function onMessageHandler(target, context, msg, self) {
         if (hugCooldown) {
             setTimeout(function () {
                 hugCooldown = 0;
-                //console.log('Timeout expired');
             }, 10000);
         }
     } else if (msg.startsWith('!boop') && !boopCooldown) {
@@ -173,33 +172,31 @@ function onMessageHandler(target, context, msg, self) {
             } else {
                 resp = `${victim} has been BOOPED for the ${myBoops}${term} time by @${context['display-name']}! In total there have been ${boopCount} boops.`;
             }
-            //client.say(target, );
+
             resp += `[${emoji.get('no_entry')} 20s]`;
             boopCooldown = 1;
         } else {
             resp = `you should @ who you want to boop.`;
-            //client.say(target, `you should @ who you want to boop.`)
+
         }
 
         client.say(target, resp);
         if (boopCooldown) {
             setTimeout(function () {
                 boopCooldown = 0;
-                //console.log('Timeout expired');
+
             }, 20000);
         }
 
     } else if (msg === '!join' && openQueue) {
         fortniteQueue = store.get('queue');
-        //console.log(fortniteQueue);
+
         if (fortniteQueue.includes(context.username))
             return;
         fortniteQueue.push(context.username);
         store.set('queue', fortniteQueue);
-        // console.log(`Added ${context['display-name']} to queue`);
-        let ans = `@${context['display-name']} Has joined the queue. The queue currently consists of: [`;
-        ans += fortniteQueue.toString();
-        ans += ']';
+
+        let ans = `@${context['display-name']} Has joined the queue. [${fortniteQueue.length} players]`;
         client.say(target, ans);
     } else if (msg === '!remove_me') {
         fortniteQueue = store.get('queue');
@@ -239,35 +236,42 @@ function onMessageHandler(target, context, msg, self) {
 
             if (mode === 1) {
                 let remover = '';
+                let removers = [];
                 let ok = 0;
                 for (let i = 0; i < msg.length; ++i) {
                     if (msg[i] === '@') {
                         ok = 1;
                         continue;
                     }
+                    if (ok === 1 && msg[i] === ' ') {
+                        ok = 0;
+                        removers.push(remover);
+                        remover = '';
+                    }
                     if (ok === 1) {
                         remover += msg[i];
                     }
-                    if (ok === 1 && msg[i] === ' ')
-                        break;
                 }
-                if (ok < 1) {
+                if (remover !== '')
+                    removers.push(remover);
+
+                if (removers.length < 1) {
                     client.say(target, `Bruh, you have to @ the dude you want to remove`);
                     return;
                 }
-                let targetExists = 0;
+                let successfulTargets = [];
                 for (let i = 0; i < fortniteQueue.length; ++i) {
-                    if (fortniteQueue[i].toLowerCase() === remover.toLowerCase()) {
-                        targetExists = 1;
-                        fortniteQueue.splice(i, 1);
+                    for (let j = 0; j < removers.length; ++j) {
+                        if (fortniteQueue[i].toLowerCase() === removers[j].toLowerCase()) {
+                            successfulTargets.push(removers[j]);
+                            fortniteQueue.splice(i, 1);
+                        }
                     }
                 }
-                if (targetExists) {
-                    client.say(target, `Successfully removed ${remover} from the queue.`);
-                    //console.log(`Successfully removed ${remover} from the queue.`);
-                } else {
-                    client.say(target, `Error! ${remover} is not in the queue.`);
-                }
+                if (successfulTargets.length > 0) {
+                    client.say(target, `Successfully removed ${successfulTargets.toString()}`);
+                } else
+                    client.say(target, `Bruh. None of the people you mentioned are in queue`);
             } else {
                 let noOfRemovals = 0;
                 for (let i = 0; i < msg.length; ++i) {
@@ -276,12 +280,12 @@ function onMessageHandler(target, context, msg, self) {
                         noOfRemovals += msg[i] - '0';
                     }
                 }
-                //console.log(noOfRemovals);
+
                 for (let i = 1; i <= Math.min(noOfRemovals, fortniteQueue.length); ++i) {
                     fortniteQueue.shift();
                 }
-                client.say(target, `Successfully removed ${noOfRemovals} players from the queue`);
-                //console.log(fortniteQueue);
+                client.say(target, `Successfully removed first ${noOfRemovals} players from the queue`);
+
             }
             store.set('queue', fortniteQueue);
         } else {
@@ -289,8 +293,7 @@ function onMessageHandler(target, context, msg, self) {
         }
     } else if (msg === '!game_queue') {
         fortniteQueue = store.get('queue');
-        //store.set('queue', fortniteQueue);
-        client.say(target, `Queue consists of : [ ${fortniteQueue} ]`)
+        client.say(target, `Queue consists of : [ ${fortniteQueue} ]. In total, ${fortniteQueue.length} players`);
     } else if (msg.startsWith('!move_end')) {
         fortniteQueue = store.get('queue');
         if (!(context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')) {
