@@ -291,7 +291,7 @@ function onMessageHandler(target, context, msg, self) {
         } else {
             client.say(target, `You don't have permission to execute that command!`);
         }
-    } else if (msg === '!game_queue') {
+    } else if (msg === '!game_queue' || msg === '!queue') {
         fortniteQueue = store.get('queue');
         client.say(target, `Queue consists of : [ ${fortniteQueue} ]. In total, ${fortniteQueue.length} players`);
     } else if (msg.startsWith('!move_end')) {
