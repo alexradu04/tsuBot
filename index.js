@@ -107,7 +107,7 @@ function onMessageHandler(target, context, msg, self) {
             hugCooldown = 1;
             msg.startsWith('!hug') ?
                 client.say(target, `ALL THE HUGS TO ${victim} FROM @${context['display-name']}! [${emoji.get('no_entry')} 10s]`) :
-                client.say(target, `TOUS LES CÂLINS À LE ${victim} DE LE @${context['display-name']}! [${emoji.get('no_entry')} 10s]`);
+                client.say(target, `TOUS LES CÂLINS À LE ${victim} DE LA PART DE LE @${context['display-name']}! [${emoji.get('no_entry')} 10s]`);
         } else {
             client.say(target, `you should @ who you want to hug.`);
         }
