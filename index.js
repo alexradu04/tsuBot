@@ -9,7 +9,7 @@ const opts = {
         password: process.env.pass,
     },
     channels: [
-        'tsukunertov'
+        'mcwolf04'
     ],
     connection: {
         reconnect: true
@@ -36,6 +36,7 @@ function onConnectedHandler(addr, port) {
 
 let boopCooldown = 0;
 let hugCooldown = 0;
+let feedCooldown = 0;
 let lurkCooldown = 0;
 let openQueue = false;
 
@@ -116,7 +117,39 @@ function onMessageHandler(target, context, msg, self) {
                 hugCooldown = 0;
             }, 10000);
         }
-    } else if (msg.startsWith('!boop') && !boopCooldown) {
+    } else if(msg.startsWith('!feed')) {
+        let ok = 0;
+        let victim = '';
+        let ingredient='';
+        for (let i = 4; i < msg.length; ++i) {
+            if (msg[i] === '@') {
+                ok = 1;
+                //continue;
+            }
+            if (msg[i] === ' ' && ok === 1) {
+                ok=2;
+                continue;
+            }
+            if (ok === 1) {
+                victim += msg[i];
+            }
+            if(ok === 2) {
+                ingredient+=msg[i];
+            }
+        }
+        if (victim !== '') {
+            hugCooldown = 1;
+            client.say(target, `Hey, ${victim}, you received a ${ingredient} sandwich from @${context.username} [${emoji.get('no_entry')} 10s]`);
+        } else {
+            client.say(target, `you should @ who you want to feed.`);
+        }
+        if (feedCooldown) {
+            setTimeout(function () {
+                feedCooldown = 0;
+            }, 10000);
+        }
+    }
+    else if (msg.startsWith('!boop') && !boopCooldown) {
         let ok = 0;
         let victim = '';
         for (let i = 6; i < msg.length; ++i) {
@@ -328,7 +361,24 @@ function onMessageHandler(target, context, msg, self) {
         fortniteQueue.push(mover);
         client.say(target, `Moved @${mover} from position ${pos + 1} to the end.`);
         store.set('queue', fortniteQueue);
-    } else if (msg.startsWith('!move')) {
+    } else if(msg === '!setme_last'){
+        let mover = context.username.toLowerCase();
+        let pos=-1;
+        for (let i = 0; i < fortniteQueue.length; ++i) {
+            if (fortniteQueue[i].toLowerCase() === mover.toLowerCase()) {
+                pos = i;
+                break;
+            }
+        }
+        if (pos === -1) {
+            client.say(target, `Bruh, You\'re not in the queue, my guy @${mover}`);
+            return;
+        }
+        fortniteQueue.splice(pos, 1);
+        fortniteQueue.push(mover);
+        client.say(target, `Moved @${mover} from position ${pos + 1} to the end.`);
+    }
+    else if (msg.startsWith('!move')) {
         fortniteQueue = store.get('queue');
         if (!(context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')) {
             client.say(target, `You don't have permission to execute that command!`);

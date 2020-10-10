@@ -13,7 +13,9 @@ List of commands:
 !remove_all : removes all players from the queue (MOD-ONLY)
 !move @<x> <y> : moves player x to position y (MOD-ONLY)
 !move_end @<x> : moves player x to the end of the queue (MOD-ONLY)
+!setme_last : moves you to the last position in queue
 !github : give you a link to the source code
 !help : shows this
 !lurk : Set yourself to lurk mode
 !check_lurk @<x> : Check if x is lurking
+!feed @<x> <ingredient> : gives x a tasty <ingredient> sandwich
