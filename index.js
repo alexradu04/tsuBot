@@ -138,15 +138,15 @@ function onMessageHandler(target, context, msg, self) {
             }
         }
         if (victim !== '') {
-            hugCooldown = 1;
-            client.say(target, `Hey, ${victim}, you received a ${ingredient} sandwich from @${context.username} [${emoji.get('no_entry')} 10s]`);
+            feedCooldown = 1;
+            client.say(target, `Hey, ${victim}, you received a ${ingredient} sandwich from @${context.username} [${emoji.get('no_entry')} 20s]`);
         } else {
             client.say(target, `you should @ who you want to feed.`);
         }
         if (feedCooldown) {
             setTimeout(function () {
                 feedCooldown = 0;
-            }, 10000);
+            }, 20000);
         }
     }
     else if (msg.startsWith('!boop') && !boopCooldown) {
