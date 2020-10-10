@@ -9,7 +9,7 @@ const opts = {
         password: process.env.pass,
     },
     channels: [
-        'mcwolf04'
+        'tsukunertov'
     ],
     connection: {
         reconnect: true
