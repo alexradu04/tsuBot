@@ -313,8 +313,8 @@ function onMessageHandler(target, context, msg, self) {
                         noOfRemovals += msg[i] - '0';
                     }
                 }
-
-                for (let i = 1; i <= Math.min(noOfRemovals, fortniteQueue.length); ++i) {
+                let queueLength = fortniteQueue.length;
+                for (let i = 1; i <= Math.min(noOfRemovals, queueLength); ++i) {
                     fortniteQueue.shift();
                 }
                 client.say(target, `Successfully removed first ${noOfRemovals} players from the queue`);
