@@ -3,6 +3,24 @@ const store = require('data-store')({path: process.cwd() + '/db.json'});
 const lurkDB = require('data-store')({path: process.cwd() + '/lurk.json'});
 const emoji = require('node-emoji');
 require('dotenv').config();
+const fs = require('fs');
+
+function checkBoopTop(target) {
+
+    let rawdata = fs.readFileSync('db.json');
+    let dbData = JSON.parse(rawdata);
+    let dbEntries = Object.entries(dbData);
+    let boopLeaderboard = [];
+    for (let boop of dbEntries) {
+        if (typeof boop[1] === "number" && boop[0].startsWith('@') && boop[0] === boop[0].toLowerCase()) {
+            boopLeaderboard.push([boop[0], boop[1]])
+        }
+    }
+    boopLeaderboard.sort(function (a, b) {
+        return b[1] - a[1];
+    })
+    client.say(target, `Top 3 most booped are: ${boopLeaderboard[0][0]} with ${boopLeaderboard[0][1]}, ${boopLeaderboard[1][0]} with ${boopLeaderboard[1][1]}, and ${boopLeaderboard[2][0]} with ${boopLeaderboard[2][1]} [${emoji.get('no_entry')} 2m]`)
+}
 const opts = {
     identity: {
         username: 'booptsubot',
@@ -38,7 +56,15 @@ let boopCooldown = 0;
 let hugCooldown = 0;
 let feedCooldown = 0;
 let lurkCooldown = 0;
+let topCooldown = 0;
 let openQueue = false;
+
+function askingFortnite(msg) {
+    msg = msg.toLowerCase();
+    const when = 'when';
+    const fortnite = 'fortnite';
+    return msg.includes(when) && msg.includes(fortnite);
+}
 
 function onMessageHandler(target, context, msg, self) {
     let temp = store.get('queue');
@@ -117,24 +143,24 @@ function onMessageHandler(target, context, msg, self) {
                 hugCooldown = 0;
             }, 10000);
         }
-    } else if(msg.startsWith('!feed')) {
+    } else if (msg.startsWith('!feed')) {
         let ok = 0;
         let victim = '';
-        let ingredient='';
+        let ingredient = '';
         for (let i = 4; i < msg.length; ++i) {
             if (msg[i] === '@') {
                 ok = 1;
                 //continue;
             }
             if (msg[i] === ' ' && ok === 1) {
-                ok=2;
+                ok = 2;
                 continue;
             }
             if (ok === 1) {
                 victim += msg[i];
             }
-            if(ok === 2) {
-                ingredient+=msg[i];
+            if (ok === 2) {
+                ingredient += msg[i];
             }
         }
         if (victim !== '') {
@@ -148,8 +174,7 @@ function onMessageHandler(target, context, msg, self) {
                 feedCooldown = 0;
             }, 20000);
         }
-    }
-    else if (msg.startsWith('!boop') && !boopCooldown) {
+    } else if (msg.startsWith('!boop') && !boopCooldown) {
         let ok = 0;
         let victim = '';
         for (let i = 6; i < msg.length; ++i) {
@@ -361,9 +386,9 @@ function onMessageHandler(target, context, msg, self) {
         fortniteQueue.push(mover);
         client.say(target, `Moved @${mover} from position ${pos + 1} to the end.`);
         store.set('queue', fortniteQueue);
-    } else if(msg === '!setme_last'){
+    } else if (msg === '!setme_last') {
         let mover = context.username.toLowerCase();
-        let pos=-1;
+        let pos = -1;
         for (let i = 0; i < fortniteQueue.length; ++i) {
             if (fortniteQueue[i].toLowerCase() === mover.toLowerCase()) {
                 pos = i;
@@ -377,8 +402,7 @@ function onMessageHandler(target, context, msg, self) {
         fortniteQueue.splice(pos, 1);
         fortniteQueue.push(mover);
         client.say(target, `Moved @${mover} from position ${pos + 1} to the end.`);
-    }
-    else if (msg.startsWith('!move')) {
+    } else if (msg.startsWith('!move')) {
         fortniteQueue = store.get('queue');
         if (!(context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')) {
             client.say(target, `You don't have permission to execute that command!`);
@@ -425,6 +449,17 @@ function onMessageHandler(target, context, msg, self) {
         moveInQueue(fortniteQueue, position, oldPos);
         client.say(target, `Successfully moved ${mover} from position ${oldPos + 1} to position ${position + 1}`);
         store.set('queue', fortniteQueue);
+    } else if (askingFortnite(msg)) {
+        client.say(target, `@${context.username} Tsu plays fortnite every Friday from 9PM EST`);
+    } else if (msg === '!top_boop' && !topCooldown) {
+        topCooldown = 1;
+        checkBoopTop(target);
+        setTimeout(
+            function () {
+                topCooldown = 0;
+            },
+            120000
+        );
     } else if (msg === '!github') {
         client.say(target, `Check out my spaghetti here: https://github.com/alexradu04/Tsu-Queue-Manager-Bot`);
     } else if (msg === '!help') {

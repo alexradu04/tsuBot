@@ -19,3 +19,4 @@ List of commands:
 !lurk : Set yourself to lurk mode
 !check_lurk @<x> : Check if x is lurking
 !feed @<x> <ingredient> : gives x a tasty <ingredient> sandwich
+!top_boop : shows you top 3 most booped persons
