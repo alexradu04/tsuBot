@@ -20,4 +20,4 @@ List of commands:
 !check_lurk @<x> : Check if x is lurking
 !feed @<x> <ingredient> : gives x a tasty <ingredient> sandwich
 !top_boop : shows you top 3 most booped persons
-!spam <x> : Send <x> as an announcement every 7 minutes
+!spam <x> : Send <x> as an announcement every 7 minutes (MOD-ONLY)
