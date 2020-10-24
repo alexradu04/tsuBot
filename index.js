@@ -87,6 +87,7 @@ function onMessageHandler(target, context, msg, self) {
     if (msg.startsWith('!spam')) {
         if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04') {
             spamMessage = msg.substring(6);
+            client.say(target, `Right on it, sir! @${context.username}`);
             shouldSpam=true;
             setTimeout(sendInfo, 420000, spamMessage, target);
         }
