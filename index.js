@@ -21,6 +21,7 @@ function checkBoopTop(target) {
     })
     client.say(target, `Top 3 most booped are: ${boopLeaderboard[0][0]} with ${boopLeaderboard[0][1]}, ${boopLeaderboard[1][0]} with ${boopLeaderboard[1][1]}, and ${boopLeaderboard[2][0]} with ${boopLeaderboard[2][1]} [${emoji.get('no_entry')} 2m]`)
 }
+
 const opts = {
     identity: {
         username: 'booptsubot',
@@ -58,12 +59,22 @@ let feedCooldown = 0;
 let lurkCooldown = 0;
 let topCooldown = 0;
 let openQueue = false;
+let shouldSpam = false;
+let spamMessage = '';
 
 function askingFortnite(msg) {
     msg = msg.toLowerCase();
     const when = 'when';
     const fortnite = 'fortnite';
     return msg.includes(when) && msg.includes(fortnite);
+}
+
+function sendInfo(info, target) {
+    if (shouldSpam === false) {
+        return;
+    }
+    client.say(target, info);
+    setTimeout(sendInfo, 420000, info, target);
 }
 
 function onMessageHandler(target, context, msg, self) {
@@ -73,7 +84,17 @@ function onMessageHandler(target, context, msg, self) {
     }
     if (self)
         return;
-    if (msg.startsWith('!lurk')) {
+    if (msg.startsWith('!spam')) {
+        if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04') {
+            spamMessage = msg.substring(6);
+            shouldSpam=true;
+            setTimeout(sendInfo, 420000, spamMessage, target);
+        }
+    } if(msg === '!stopspam' || msg === '!stop_spam') {
+        if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')
+            shouldSpam = false;
+    }
+    else if (msg.startsWith('!lurk')) {
         lurkDB.set(context.username, true);
         client.say(target, `${context['display-name']} is now lurking!`);
         return;
