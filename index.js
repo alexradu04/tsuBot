@@ -59,7 +59,9 @@ let feedCooldown = 0;
 let lurkCooldown = 0;
 let topCooldown = 0;
 let openQueue = false;
-let shouldSpam = false;
+let shouldSpam = {
+
+};
 let spamMessage = '';
 
 function askingFortnite(msg) {
@@ -69,14 +71,13 @@ function askingFortnite(msg) {
     return msg.includes(when) && msg.includes(fortnite);
 }
 
-function sendInfo(info, target) {
-    if (shouldSpam === false) {
+function sendInfo(info, target, spamID) {
+    if (shouldSpam[spamID] !== true) {
         return;
     }
     client.say(target, info);
-    setTimeout(sendInfo, 420000, info, target);
+    setTimeout(sendInfo, 420000, info, target, spamID);
 }
-
 function onMessageHandler(target, context, msg, self) {
     let temp = store.get('queue');
     if (temp === undefined) {
@@ -88,12 +89,14 @@ function onMessageHandler(target, context, msg, self) {
         if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04') {
             spamMessage = msg.substring(6);
             client.say(target, `Right on it, sir! @${context.username}`);
-            shouldSpam=true;
-            setTimeout(sendInfo, 420000, spamMessage, target);
+            let spamID = (new Date()).getTime().toString();
+            shouldSpam[spamID]=true;
+            setTimeout(sendInfo, 420000, spamMessage, target, spamID);
         }
     } if(msg === '!stopspam' || msg === '!stop_spam') {
-        if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04')
-            shouldSpam = false;
+        if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04') {
+            shouldSpam={};
+        }
     }
     else if (msg.startsWith('!lurk')) {
         lurkDB.set(context.username, true);
