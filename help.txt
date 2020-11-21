@@ -21,3 +21,4 @@ List of commands:
 !feed @<x> <ingredient> : gives x a tasty <ingredient> sandwich
 !top_boop : shows you top 3 most booped persons
 !spam <x> : Send <x> as an announcement every 7 minutes (MOD-ONLY)
+!stopspam : Stops spamming
