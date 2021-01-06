@@ -58,6 +58,7 @@ let hugCooldown = 0;
 let feedCooldown = 0;
 let lurkCooldown = 0;
 let topCooldown = 0;
+let bonkCooldown = 0;
 let openQueue = false;
 let shouldSpam = {
 
@@ -140,14 +141,38 @@ function onMessageHandler(target, context, msg, self) {
         } else {
             client.say(target, `You need to @ who you're checking on`);
         }
+    }else if(msg.startsWith('!bonk') && !bonkCooldown) {
+        let ok = 0;
+        let victim = '';
+        for (let i = 5; i < msg.length; ++i) {
+            if (msg[i] === '@') {
+                ok = 1;
+            }
+            if (ok === 1) {
+                victim += msg[i];
+            }
+            if (msg[i] === ' ' && ok === 1) {
+                break;
+            }
+        }
+        if (victim !== '') {
+            bonkCooldown = 1;
+            client.say(target, `${victim} has ben BONKED by @${context['display-name']}. Happy bonking! tsukun1BAN [${emoji.get('no_entry')} 1m]`);
+        } else {
+            client.say(target, `you should @ who you want to BONK.`);
+        }
+        if (bonkCooldown) {
+            setTimeout(function () {
+                bonkCooldown = 0;
+            }, 60000);
+        }
     }
-    if ((msg.startsWith('!hug') || msg.startsWith('!lehug')) && !hugCooldown) {
+    else if ((msg.startsWith('!hug') || msg.startsWith('!lehug')) && !hugCooldown) {
         let ok = 0;
         let victim = '';
         for (let i = 4; i < msg.length; ++i) {
             if (msg[i] === '@') {
                 ok = 1;
-                //continue;
             }
             if (ok === 1) {
                 victim += msg[i];
@@ -203,7 +228,7 @@ function onMessageHandler(target, context, msg, self) {
     } else if (msg.startsWith('!boop') && !boopCooldown) {
         let ok = 0;
         let victim = '';
-        for (let i = 6; i < msg.length; ++i) {
+        for (let i = 5; i < msg.length; ++i) {
             if (msg[i] === '@') {
                 ok = 1;
                 //continue;
