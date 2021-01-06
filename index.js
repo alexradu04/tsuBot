@@ -157,7 +157,7 @@ function onMessageHandler(target, context, msg, self) {
         }
         if (victim !== '') {
             bonkCooldown = 1;
-            client.say(target, `${victim} has ben BONKED by @${context['display-name']}. Happy bonking! tsukun1BAN [${emoji.get('no_entry')} 1m]`);
+            client.say(target, `${victim} has been BONKED by @${context['display-name']}. Happy bonking! tsukun1BAN [${emoji.get('no_entry')} 1m]`);
         } else {
             client.say(target, `you should @ who you want to BONK.`);
         }
