@@ -97,8 +97,8 @@ function onMessageHandler(target, context, msg, self) {
     }else if(msg === '!stopspam' || msg === '!stop_spam') {
         if (context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04') {
             shouldSpam={};
-        }
         client.say(target, `Stopping the spam!`);
+        }
     }
     else if (msg.startsWith('!lurk')) {
         lurkDB.set(context.username, true);
