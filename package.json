@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "lowdb": "^1.0.0",
+    "node-emoji": "^1.10.0",
+    "node-fetch": "^2.6.1",
+    "tmi.js": "^1.7.1",
+    "twitch": "^4.4.11",
+    "twitch-auth": "^4.4.11"
+  }
+}
