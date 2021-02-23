@@ -13,7 +13,7 @@ const authProvider = new StaticAuthProvider(process.env.client_id, process.env.a
 const apiClient = new ApiClient({authProvider});
 const helixApi = apiClient.helix;
 let tsuStream;
-const broadcasterUsername = 'tsukunertov';
+const broadcasterUsername = 'mcwolf04';
 const opts = {
     identity: {
         username: 'booptsubot',
@@ -362,7 +362,8 @@ async function getInfo(username) {
             }
         }
     )).json();
-
+    if(resp['status'] === 400)
+        return undefined;
     console.log(resp);
     return resp['data'][0];
 }
