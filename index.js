@@ -13,7 +13,7 @@ const authProvider = new StaticAuthProvider(process.env.client_id, process.env.a
 const apiClient = new ApiClient({authProvider});
 const helixApi = apiClient.helix;
 let tsuStream;
-const broadcasterUsername = 'mcwolf04';
+const broadcasterUsername = process.env.broadcaster;
 const opts = {
     identity: {
         username: 'booptsubot',
