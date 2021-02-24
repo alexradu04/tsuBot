@@ -309,7 +309,7 @@ async function onMessageHandler(target, context, msg, self) {
             return;
         }
         for (let i = 1; i < args.length; ++i) {
-            spamMessage += args[i];
+            spamMessage += (args[i] + " ");
         }
         // console.log(spamMessage);
         client.say(target, `Right on it, sir! Every ${parseInt(args[0])} minutes @${context.username}`);
