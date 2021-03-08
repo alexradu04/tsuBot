@@ -196,13 +196,13 @@ async function onMessageHandler(target, context, msg, self) {
         setTimeout(function () {
             cooldowns[CommandEnum.feed] = 0;
         }, 20000);
-    } else if (msg === '!open' && checkPermission(context)) {
+    } else if (msg.toLowerCase() === '!open' && checkPermission(context)) {
         openQueue = true;
         client.say(target, `Successfully opened the queue!`);
-    } else if (msg === '!close' && checkPermission(context)) {
+    } else if (msg.toLowerCase() === '!close' && checkPermission(context)) {
         openQueue = false;
         client.say(target, `Queue successfully closed!`);
-    } else if (msg === '!join' && openQueue) {
+    } else if (msg.toLowerCase() === '!join' && openQueue) {
         if (gameQueue.includes(context['display-name'].toLowerCase()))
             return;
         gameQueue.push(context['display-name'].toLowerCase());
