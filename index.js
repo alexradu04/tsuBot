@@ -1,5 +1,6 @@
 const {ApiClient} = require('twitch');
 const {StaticAuthProvider} = require('twitch-auth');
+const pubSub = require("twitch-pubsub-client");
 const tmi = require("tmi.js");
 require('dotenv').config();
 const emoji = require('node-emoji');
@@ -10,6 +11,9 @@ const adapter = new FileSync('db.json')
 const db = low(adapter);
 const fs = require('fs');
 const authProvider = new StaticAuthProvider(process.env.client_id, process.env.access_token);
+const broadcasterAuth = new StaticAuthProvider(process.env.broadcaster_client_id, process.env.broadcaster_access_token, ['channel:read:redemptions'], "user");
+// const boradcasterApiClient = new ApiClient({broadcasterAuth});
+const broadcasterPubSubClient = new pubSub.SingleUserPubSubClient({twitchClient: broadcasterAuth})
 const apiClient = new ApiClient({authProvider});
 const helixApi = apiClient.helix;
 let tsuStream;
@@ -30,7 +34,7 @@ const client = new tmi.client(opts);
 client.connect();
 client.on('connected', onConnectedHandler);
 client.on('message', onMessageHandler);
-
+broadcasterPubSubClient.onRedemption(redemptionHandler);
 async function onConnectedHandler(addr, port) {
     console.log(`* Connected to ${addr}:${port}`);
     tsuStream = await helixApi.streams.getStreamByUserName(broadcasterUsername);
@@ -138,6 +142,21 @@ async function onMessageHandler(target, context, msg, self) {
                 .value();
         }
         let noboops;
+        if(data !== undefined && data.shield === true) {
+            if (info !== undefined) {
+                db.get('users')
+                    .find({id: info['id']})
+                    .assign({shield: false})
+                    .write();
+            } else {
+                db.get('users')
+                    .find({id: data['id']})
+                    .assign({shield: false})
+                    .write();
+            }
+            client.say("#tsukunertov",`${context['display-name']} just broke ${args[0]}'s shield! [${emoji.get('no_entry')} 20s]`);
+            return;
+        }
         if (data === undefined) {
             db.get('users')
                 .push({id: info['id'], user: info['display_name'].toLowerCase(), boops: 1, lurking: false})
@@ -148,12 +167,12 @@ async function onMessageHandler(target, context, msg, self) {
             if (info !== undefined) {
                 db.get('users')
                     .find({id: info['id']})
-                    .assign({'boops': noboops, user: info['display_name'].toLowerCase()})
+                    .assign({'boops': noboops, user: info['display_name'].toLowerCase(), shield: false})
                     .write();
             } else {
                 db.get('users')
                     .find({id: data['id']})
-                    .assign({'boops': noboops, user: data['user'].toLowerCase()})
+                    .assign({'boops': noboops, user: data['user'].toLowerCase(), shield: false})
                     .write();
             }
         }
@@ -285,12 +304,12 @@ async function onMessageHandler(target, context, msg, self) {
         }
         if (data === undefined) {
             db.get('users')
-                .push({id: context['user-id'], user: context['display-name'].toLowerCase(), boops: 0, lurking: true})
+                .push({id: context['user-id'], user: context['display-name'].toLowerCase(), boops: 0, lurking: true, shield:false})
                 .write();
         } else {
             db.get('users')
                 .find({id: context['user-id']})
-                .assign({'lurking': true, user: context['display-name'].toLowerCase()})
+                .assign({'lurking': true, user: context['display-name'].toLowerCase(), shield:false})
                 .write();
         }
         client.say(target, `@${context['display-name']} is now lurking!`);
@@ -394,4 +413,30 @@ function checkLemming(msg) {
     const fortnite = 'fortnite';
     const time = 'time';
     return (msg.includes(when) && msg.includes(fortnite)) || (msg.includes(time) && msg.includes(fortnite));
+}
+function redemptionHandler (message) {
+    console.log('test');
+    if(message.rewardId === '1b410e8d-fe15-43fc-8ea3-5fed649cbf23')
+    {
+        let data = db.get('users')
+            .find({id: message.userId})
+            .value();
+        if (data === undefined) {
+            db.get('users')
+                .push({
+                    id: message.userId,
+                    user: message.userDisplayName.toLowerCase(),
+                    boops: 0,
+                    lurking: false,
+                    shield: true
+                })
+                .write();
+        } else {
+            db.get('users')
+                .find({id: message.userId})
+                .assign({user: message.userDisplayName.toLowerCase(), shield: true})
+                .write();
+        }
+        client.say('#tsukunertov', `User ${message.userDisplayName} has activated a shield`);
+    }
 }
