@@ -388,7 +388,7 @@ async function getInfo(username) {
 }
 
 function checkPermission(context) {
-    return context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04';
+    return (context.badges !== null && context.badges['vip']!==undefined) || context.mod || context.username === 'tsukunertov' || context.username === 'mcwolf04';
 }
 
 function checkBoopTop(target) {
