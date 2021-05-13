@@ -321,20 +321,28 @@ async function onMessageHandler(target, context, msg, self) {
         }, 120000);
     } else if (command === '!spam' && checkPermission(context)) {
         let spamMessage = '';
-        // console.log(typeof parseInt(args[0]));
         // spamMessage = msg.substring(6);
-        if (isNaN(parseInt(args[0]))) {
+        if (isNaN(parseFloat(args[0]))) {
             client.say(target, 'Please use the new format: !spam < number of minutes between messagegs > <spam messagge>');
+            return;
+        }
+        let interval = parseFloat(args[0]);
+        if(interval < 0.1) {
+            client.say(target, 'Spam Interval too frequent! Chill out!');
             return;
         }
         for (let i = 1; i < args.length; ++i) {
             spamMessage += (args[i] + " ");
         }
+        if(spamMessage[0] === '/' && args[1]!=='/me') {
+            client.say(target, 'You cannot spam commands!');
+            return;
+        }
         // console.log(spamMessage);
-        client.say(target, `Right on it, sir! Every ${parseInt(args[0])} minutes @${context.username}`);
+        client.say(target, `Right on it, sir! Every ${interval} minutes @${context.username}`);
         let spamID = (new Date()).getTime().toString();
         shouldSpam[spamID] = true;
-        setTimeout(sendInfo, parseInt(args[0]) * 60000, spamMessage, target, spamID, parseInt(args[0]) * 60000);
+        setTimeout(sendInfo, interval * 60000, spamMessage, target, spamID, interval * 60000);
     } else if ((command === '!stopspam' || command === '!stop_spam') && checkPermission(context)) {
         shouldSpam = {};
         client.say(target, `Stopping the spam!`);
