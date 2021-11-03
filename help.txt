@@ -3,6 +3,7 @@ List of commands:
 !hug @<x> : hugs x
 !bonk @<x> : BONKS x
 !lehug @<x> : le hugs x
+!abraco @<x> : abracos x
 !boop @<x> : boops x
 !open : opens queue (MOD-ONLY)
 !close : closes queue (MOD-ONLY)

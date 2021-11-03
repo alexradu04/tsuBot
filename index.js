@@ -94,6 +94,16 @@ async function onMessageHandler(target, context, msg, self) {
         setTimeout(function () {
             cooldowns[CommandEnum.hug] = 0;
         }, 10000);
+    } else if (command === '!abraco' && !cooldowns[CommandEnum.hug]) {
+        if (!args[0].startsWith('@')) {
+            client.say(target, `@${context['display-name']} please @ who you want to abraco`);
+            return;
+        }
+        client.say(target, `TODOS OS ABRAÇOS PARA ${args[0]} DE @${context['display-name']}! [${emoji.get('no_entry')} 10s]`);
+        cooldowns[CommandEnum.hug] = 1;
+        setTimeout(function () {
+            cooldowns[CommandEnum.hug] = 0;
+        }, 10000);
     } else if (command === '!bonk' && !cooldowns[CommandEnum.bonk]) {
         if (!args[0].startsWith('@')) {
             client.say(target, `@${context['display-name']} please @ who you want to bonk`);
