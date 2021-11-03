@@ -71,7 +71,7 @@ async function onMessageHandler(target, context, msg, self) {
     }
 
     if (checkLemming(msg)) {
-        client.say(target, `@${context['display-name']}, fortnite is played every community day (Friday) at 9PM EST`)
+        client.say(target, `@${context['display-name']}, Tsu takes the time to play Ori once a year, and that date is 30th of February`)
     }
 
     if (command === '!hug' && !cooldowns[CommandEnum.hug]) {
@@ -428,7 +428,7 @@ function checkBoopTop(target) {
 function checkLemming(msg) {
     msg = msg.toLowerCase();
     const when = 'when';
-    const fortnite = 'fortnite';
+    const fortnite = 'ori';
     const time = 'time';
     return (msg.includes(when) && msg.includes(fortnite)) || (msg.includes(time) && msg.includes(fortnite));
 }
