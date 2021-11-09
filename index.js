@@ -430,7 +430,8 @@ function checkLemming(msg) {
     const when = 'when';
     const fortnite = 'ori';
     const time = 'time';
-    return (msg.includes(when) && msg.includes(fortnite)) || (msg.includes(time) && msg.includes(fortnite));
+    let words = msg.split(' ');
+    return (words.find( (word) => word ===when) && words.find( (word) => word ===fortnite)) || (words.find( (word) => word ===time) && words.find( (word) => word ===fortnite));
 }
 function redemptionHandler (message) {
     console.log('test');
