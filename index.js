@@ -337,6 +337,10 @@ async function onMessageHandler(target, context, msg, self) {
             return;
         }
         let interval = parseFloat(args[0]);
+        if(args[0].length > 4) {
+            client.say(target, 'Spam Interval too long! Try something more frequent');
+            return;
+        }
         if(interval < 0.1) {
             client.say(target, 'Spam Interval too frequent! Chill out!');
             return;
