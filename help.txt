@@ -24,3 +24,8 @@ List of commands:
 !top_boop : shows you top 3 most booped persons
 !spam <x> <y> : Send <y> as an announcement every x minutes (MOD-ONLY)
 !stopspam : Stops spamming
+!add_death : Adds one death to current death counter
+!add_death <X> : Adds x deaths to current death counter
+!remove_death : Removes one death from current death counter
+!remove_death <X> : Removes x deaths from current death counter
+!reset_death_counter : Resets the death count for the current game

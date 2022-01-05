@@ -360,11 +360,65 @@ async function onMessageHandler(target, context, msg, self) {
     } else if ((command === '!stopspam' || command === '!stop_spam') && checkPermission(context)) {
         shouldSpam = {};
         client.say(target, `Stopping the spam!`);
+    } else if ((command === '!add_death' || command === '!adddeath') && checkPermission(context)) {
+        if(( await checkStreamDead())) {
+            client.say(target, `Stream Offline!`);
+            db.set('totalDeaths', 0).write();
+            db.set('currentDeaths', 0).write();
+            return;
+        }
+        let deathsToAdd;
+        if (isNaN(parseFloat(args[0]))) {
+            deathsToAdd = 1;
+        }
+        else
+            deathsToAdd = parseFloat(args[0]);
+        db.set('currentDeaths', db.get("currentDeaths").value() + deathsToAdd).write();
+        db.set('totalDeaths', db.get("totalDeaths").value() + deathsToAdd).write();
+        client.say(target, `${db.get("currentDeaths")} deaths for current game, and ${db.get("totalDeaths")} deaths for the stream.`);
+    } else if ((command === '!remove_death' || command === '!removedeath') && checkPermission(context)) {
+        if(( await checkStreamDead())) {
+            client.say(target, `Stream Offline!`);
+            db.set('totalDeaths', 0).write();
+            db.set('currentDeaths', 0).write();
+            return;
+        }
+        let deathsToRemove;
+        if (isNaN(parseFloat(args[0]))) {
+            deathsToRemove = 1;
+        }
+        else
+            deathsToRemove = parseFloat(args[0]);
+        db.set('currentDeaths', db.get("currentDeaths").value() - deathsToRemove).write();
+        db.set('totalDeaths', db.get("totalDeaths").value() - deathsToRemove).write();
+        client.say(target, `${db.get("currentDeaths")} deaths for current game, and ${db.get("totalDeaths")} deaths for the stream.`);
+    } else if((command === '!resetdeathcounter') || (command === '!reset_death_counter') && checkPermission(context)) {
+        if(( await checkStreamDead())) {
+            client.say(target, `Stream Offline!`);
+            db.set('totalDeaths', 0).write();
+            db.set('currentDeaths', 0).write();
+            return;
+        }
+        db.set('currentDeaths', 0).write();
+        client.say(target, `Reset Counter for current game!`);
+    } else if((command === '!deathcount') || (command === '!death_count')) {
+        if(( await checkStreamDead())) {
+            client.say(target, `Stream Offline!`);
+            db.set('totalDeaths', 0).write();
+            db.set('currentDeaths', 0).write();
+            return;
+        }
+        client.say(target, `${db.get("currentDeaths")} deaths for current game, and ${db.get("totalDeaths")} deaths for the stream.`);
     } else if (msg === '!github') {
         client.say(target, `Check out my spaghetti here: https://github.com/alexradu04/Tsu-Queue-Manager-Bot`);
     } else if (msg === '!help') {
         client.say(target, "List of commands: https://raw.githubusercontent.com/alexradu04/Tsu-Queue-Manager-Bot/master/help.txt")
     }
+}
+
+async function checkStreamDead () {
+    tsuStream = await helixApi.streams.getStreamByUserName(broadcasterUsername);
+    return (tsuStream === null);
 }
 
 async function sendInfo(info, target, spamID, time) {
