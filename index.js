@@ -348,7 +348,7 @@ async function onMessageHandler(target, context, msg, self) {
         for (let i = 1; i < args.length; ++i) {
             spamMessage += (args[i] + " ");
         }
-        if(spamMessage[0] === '/' && args[1]!=='/me') {
+        if(spamMessage[0] === '/' && (args[1]!=='/me' && !args[1].startsWith('/announce'))) {
             client.say(target, 'You cannot spam commands!');
             return;
         }
